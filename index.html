@@ -7,7 +7,7 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
-    <script src="seoulhousingpricewgs.geojson" type="text/javascript"></script>
+    <script src="seoulhousingpricewgsmin.geojson" type="text/javascript"></script>
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -72,7 +72,7 @@ const hexGrid = turf.hexGrid(bbox, cellSide, options);
 
 
 hexGrid.features.forEach(f => {
-  var ptsWithin = turf.pointsWithinPolygon(seoulhousingpricewgs, f);
+  var ptsWithin = turf.pointsWithinPolygon(seoulhousingpricewgsmin, f);
   var ptsWithinPriceArr = [];
   ptsWithin.features.forEach(e => {
     ptsWithinPriceArr.push(e.properties['A15'])
@@ -160,7 +160,7 @@ map.on('load', function() {
     //     type: "geojson",
     //     // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
     //     // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-    //     data: seoulhousingpricewgs,
+    //     data: seoulhousingpricewgsmin,
     //     cluster: true,
     //     clusterMaxZoom: 14, // Max zoom to cluster points on
     //     clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
