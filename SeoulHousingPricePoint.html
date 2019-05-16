@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' type='text/css'/>
-    <script src="seoulhousingpricewgs.geojson" type="text/javascript"></script>
+    <script src="seoulresmin.geojson" type="text/javascript"></script>
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -62,7 +62,7 @@ map.on('load', function () {
         'type': 'circle',
         'source': {
             type: 'geojson',
-            data: seoulhousingpricewgs
+            data: seoulresmin
         },
 
         'paint': {
@@ -76,9 +76,9 @@ map.on('load', function () {
 
             'circle-color': [
                 "interpolate-hcl", ["linear"], ["get", "A15"],
-                0, '#3bb2d0',
+                180000, '#3bb2d0',
                 // 20000000.0, '#fbb03b',
-                24000000.0, '#e55e5e'
+                220000, '#e55e5e'
             ],
 
             // 'circle-blur': {
@@ -88,15 +88,15 @@ map.on('load', function () {
             //   24000000.0, 0
             // }
 
-            'circle-blur': 1,
+            // 'circle-blur': 1,
 
-            // 'circle-color': '#088',
-            'circle-opacity': [
-              "interpolate", ["linear"], ["get", "A15"],
-              0, 0,
-              // 12000000.0, 0.8,
-              24000000.0, 1
-            ]
+            // // 'circle-color': '#088',
+            // 'circle-opacity': [
+            //   "interpolate", ["linear"], ["get", "A15"],
+            //   0, 0,
+            //   // 12000000.0, 0.8,
+            //   24000000.0, 1
+            // ]
 
             // 'circle-color': [
             //     'match',

@@ -7,7 +7,7 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
-    <script src="seoulhousingpricewgsmin.geojson" type="text/javascript"></script>
+    <script src="seoulresmin.geojson" type="text/javascript"></script>
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -39,14 +39,12 @@ const arrMin = arr => Math.min(...arr);
 const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
 const arrSum = arr => arr.reduce((a,b) => a + b, 0)
 
-const bbox = [126.8, 37.4, 127.2, 37.7];
-const cellSide = 0.5;
-const options = {};
-const hexGrid = turf.hexGrid(bbox, cellSide, options);
+// var bbox = [126.8, 37.4, 127.2, 37.7];
+// var cellSide = 1;
+// var options = {};
+// var hexGrid = turf.hexGrid(bbox, cellSide, options);
 // var hexpriceAvg = [];
 // var hexpriceAvgclean=[];
-
-
 // const hexpriceAvgclean = hexpriceAvg.filter(function (value) {
 //     return !Number.isNaN(value);
 // });
@@ -70,20 +68,42 @@ const hexGrid = turf.hexGrid(bbox, cellSide, options);
 
 // hexpriceAvgclean = hexpriceAvg.filter(filterByID);
 
+// var hexfeat = ptstohex();
+let featcollected = ptstohex();
 
-hexGrid.features.forEach(f => {
-  var ptsWithin = turf.pointsWithinPolygon(seoulhousingpricewgsmin, f);
-  var ptsWithinPriceArr = [];
-  ptsWithin.features.forEach(e => {
-    ptsWithinPriceArr.push(e.properties['A15'])
-  })
-  var ptsWithinPriceAvg = arrAvg(ptsWithinPriceArr)*0.0005;
-  // var centerpoint = turf.center(f);
-  // var centercoords = turf.getCoord(centerpoint);
-  // hexpriceAvg.push(ptsWithinPriceAvg);
 
-  f.properties = { pricesum: ptsWithinPriceAvg, count: ptsWithin.features.length};
-});
+// hexGrid.features.forEach(f => {
+//     var ptsWithin = turf.pointsWithinPolygon(seoulresmin, f);
+
+//     var ptsWithinPriceArr = [];
+//     ptsWithin.features.forEach(e => {
+//         ptsWithinPriceArr.push(e.properties['A15'])
+//     })
+//     var ptsWithinPriceAvg = arrSum(ptsWithinPriceArr)*0.0001;
+//     // var centerpoint = turf.center(f);
+//     // var centercoords = turf.getCoord(centerpoint);
+//     // hexpriceAvg.push(ptsWithinPriceAvg);
+
+//     f.properties = { pricesum: ptsWithinPriceAvg, count: ptsWithin.features.length};
+// });
+
+function ptstohex(){
+    var bbox = [126.8, 37.4, 127.2, 37.7];
+    var cellSide = 1;
+    var options = {};
+    var hexGrid = turf.hexGrid(bbox, cellSide, options);
+    var collected = turf.collect(hexGrid, seoulresmin, 'A15', 'ptsPrice');
+    // var tempfeat = [];
+    // var collection = turf.featureCollection([tempfeat]);
+    var filteredFeatures = collected.features.filter(function(feature) {
+        return feature.properties.ptsPrice.length > 0;
+    })
+    var filteredFeatureCollection = {
+        "type":"FeatureCollection",
+        "features":filteredFeatures
+    }
+    return filteredFeatureCollection;
+}
 
 
 
@@ -160,7 +180,7 @@ map.on('load', function() {
     //     type: "geojson",
     //     // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
     //     // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-    //     data: seoulhousingpricewgsmin,
+    //     data: seoulresmin,
     //     cluster: true,
     //     clusterMaxZoom: 14, // Max zoom to cluster points on
     //     clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
